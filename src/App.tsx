@@ -65,7 +65,9 @@ interface ActiveTimer {
 
 export default function App() {
   const [activeTimers, setActiveTimers] = useState<ActiveTimer[]>([]);
-  const [volume, setVolume] = useState<number>(100);
+  const [volume, setVolume] = useState<number>(() =>
+    load<number>("volume", 100),
+  );
   const [showVolumeModal, setShowVolumeModal] = useState<boolean>(false);
 
   const audioRef = useRef<HTMLAudioElement>(null);
@@ -77,23 +79,12 @@ export default function App() {
     }, 100);
   }, []);
 
+  // Zapisuj volume przy każdej zmianie
   useEffect(() => {
-    loadSettings();
-  }, []);
-
-  const loadSettings = async () => {
-    const savedVolume = await load<number>("volume", 100);
-    if (savedVolume !== null) setVolume(savedVolume);
-  };
-
-  const saveSettings = async () => {
-    await save("volume", volume);
-  };
-
-  useEffect(() => {
-    saveSettings();
+    save("volume", volume);
   }, [volume]);
 
+  // Aktualizuj timery co 100ms
   useEffect(() => {
     const interval = setInterval(() => {
       setActiveTimers((prev) =>
@@ -253,7 +244,7 @@ export default function App() {
                       const timer = activeTimers.find(
                         (t) => t.configId === config.id,
                       );
-                      return timer && !timer.isPaused;
+                      return timer !== undefined && !timer.isPaused;
                     })()}
                   >
                     Start

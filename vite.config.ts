@@ -9,4 +9,8 @@ export default defineConfig({
     outDir: "dist",
   },
   publicDir: "public",
+  server: {
+    port: 5173,
+    strictPort: true,
+  },
 });

@@ -2,81 +2,29 @@
   "name": "sot-cooking-timer",
   "version": "1.0.0",
   "description": "A simple Sea of Thieves cooking timer for all food types in game with alert sound!",
-  "author": "Xeyo-Developer",
-  "main": "electron/main.js",
+  "author": "Xeyo (wojciechfirmowe@wp.pl)",
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
-    "electron:build": "npm run build && electron-builder",
+    "tauri:dev": "tauri dev",
+    "tauri:build": "tauri build",
     "pretty": "npx prettier --write \"./**/*.{tsx,ts,jsx,js,css,mjs,json,yaml}\""
-  },
-  "build": {
-    "appId": "com.xeyo.sot-cooking-timer",
-    "productName": "Sea of Thieves Cooking Timer",
-    "directories": {
-      "output": "release"
-    },
-    "files": [
-      "dist/**/*",
-      "electron/**/*",
-      "assets/**/*",
-      "package.json"
-    ],
-    "win": {
-      "target": [
-        "nsis"
-      ],
-      "icon": "assets/icon.ico",
-      "signAndEditExecutable": false,
-      "artifactName": "SoT-Cooking-Timer-${version}-Windows.${ext}"
-    },
-    "nsis": {
-      "oneClick": false,
-      "perMachine": false,
-      "allowToChangeInstallationDirectory": true,
-      "createDesktopShortcut": true,
-      "createStartMenuShortcut": true,
-      "shortcutName": "SoT Cooking Timer",
-      "installerIcon": "assets/icon.ico",
-      "uninstallerIcon": "assets/icon.ico"
-    },
-    "mac": {
-      "target": [
-        "dmg"
-      ],
-      "icon": "assets/icon.icns",
-      "artifactName": "SoT-Cooking-Timer-${version}-MacOS.${ext}"
-    },
-    "linux": {
-      "target": [
-        "AppImage",
-        "deb"
-      ],
-      "icon": "assets",
-      "artifactName": "SoT-Cooking-Timer-${version}-Linux.${ext}"
-    }
   },
   "dependencies": {
     "react": "^19.2.4",
     "react-dom": "^19.2.4"
   },
   "devDependencies": {
-    "@eslint/eslintrc": "^3.3.3",
+    "@tauri-apps/api": "^2.10.1",
+    "@tauri-apps/cli": "^2.10.0",
     "@tailwindcss/postcss": "^4.2.0",
     "@tailwindcss/vite": "^4.2.0",
-    "@types/node": "^25.2.3",
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
     "@vitejs/plugin-react": "^5.1.4",
-    "autoprefixer": "^10.4.24",
-    "electron": "^40.4.1",
-    "electron-builder": "^26.8.1",
-    "eslint": "^10.0.0",
-    "globals": "^17.3.0",
     "postcss": "^8.5.6",
     "prettier": "^3.8.1",
     "typescript": "^5.9.3",
-    "typescript-eslint": "^8.56.0",
     "vite": "^7.3.1"
   }
 }

@@ -1,7 +1,7 @@
 ##
 
 <div align="center">
-    <img src="/assets/icon.ico" width="256" alt="SoT Cooking Timer App Logo as ICO"/>
+    <img src="/src-tauri/icons/icon.ico" width="256" alt="SoT Cooking Timer App Logo as ICO"/>
     <h1>Sea of Thieves Cooking Timer</h1>
 </div>
 

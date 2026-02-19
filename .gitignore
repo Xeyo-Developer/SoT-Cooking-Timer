@@ -12,6 +12,8 @@ dist
 dist-ssr
 release
 *.local
+target/
+gen/
 
 # Editor directories and files
 .vscode/*
