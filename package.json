@@ -1,6 +1,6 @@
 {
   "name": "sot-cooking-timer",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A simple Sea of Thieves cooking timer for all food types in game with alert sound!",
   "author": "Xeyo (wojciechfirmowe@wp.pl)",
   "scripts": {

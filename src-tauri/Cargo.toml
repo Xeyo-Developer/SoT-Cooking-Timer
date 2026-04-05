@@ -1,6 +1,6 @@
 [package]
 name = "sot-cooking-timer"
-version = "1.0.0"
+version = "1.0.1"
 description = "A simple Sea of Thieves cooking timer"
 authors = ["Xeyo (wojciechfirmowe@wp.pl)"]
 edition = "2024"

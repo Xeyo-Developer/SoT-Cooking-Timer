@@ -3,7 +3,7 @@ name: SoT Cooking Timer — Build
 on:
   push:
     tags:
-      - 'v1.0.0'
+      - 'v*'
 
 jobs:
   build:

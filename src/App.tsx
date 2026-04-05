@@ -63,11 +63,71 @@ interface ActiveTimer {
   isPaused: boolean;
 }
 
-function volumeIcon(vol: number) {
-  if (vol === 0) return "🔇";
-  if (vol < 40) return "🔈";
-  if (vol < 70) return "🔉";
-  return "🔊";
+function VolumeIcon({ volume }: { volume: number }) {
+  const muted = volume === 0;
+
+  return (
+    <svg
+      width="22"
+      height="22"
+      viewBox="0 0 24 24"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      aria-hidden="true"
+    >
+      <path
+        d="M3 9H7L13 4V20L7 15H3V9Z"
+        fill="currentColor"
+        stroke="currentColor"
+        strokeWidth="0.5"
+        strokeLinejoin="round"
+      />
+
+      {!muted && (
+        <>
+          <path
+            d="M16 9.5C16.8 10.3 17.3 11.1 17.3 12C17.3 12.9 16.8 13.7 16 14.5"
+            stroke="currentColor"
+            strokeWidth="1.6"
+            strokeLinecap="round"
+            fill="none"
+          />
+          {volume >= 40 && (
+            <path
+              d="M18.5 7C20 8.5 21 10.2 21 12C21 13.8 20 15.5 18.5 17"
+              stroke="currentColor"
+              strokeWidth="1.6"
+              strokeLinecap="round"
+              fill="none"
+            />
+          )}
+        </>
+      )}
+
+      {muted && (
+        <>
+          <line
+            x1="16"
+            y1="9"
+            x2="21"
+            y2="15"
+            stroke="currentColor"
+            strokeWidth="1.8"
+            strokeLinecap="round"
+          />
+          <line
+            x1="21"
+            y1="9"
+            x2="16"
+            y2="15"
+            stroke="currentColor"
+            strokeWidth="1.8"
+            strokeLinecap="round"
+          />
+        </>
+      )}
+    </svg>
+  );
 }
 
 export default function App() {
@@ -288,13 +348,16 @@ export default function App() {
           <div className="controls-card">
             <div className="controls-row">
               <div className="volume-inline">
-                <button
-                  className="volume-icon-btn"
-                  onClick={testSound}
-                  title="Test sound"
-                >
-                  {volumeIcon(volume)}
-                </button>
+                <div className="volume-icon-wrap">
+                  <button
+                    className="volume-icon-btn"
+                    onClick={testSound}
+                    aria-label="Test sound"
+                  >
+                    <VolumeIcon volume={volume} />
+                  </button>
+                  <span className="volume-tooltip">Click to test sound</span>
+                </div>
                 <input
                   className="volume-slider"
                   type="range"
