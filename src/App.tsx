@@ -63,28 +63,30 @@ interface ActiveTimer {
   isPaused: boolean;
 }
 
+function volumeIcon(vol: number) {
+  if (vol === 0) return "🔇";
+  if (vol < 40) return "🔈";
+  if (vol < 70) return "🔉";
+  return "🔊";
+}
+
 export default function App() {
   const [activeTimers, setActiveTimers] = useState<ActiveTimer[]>([]);
   const [volume, setVolume] = useState<number>(() =>
     load<number>("volume", 100),
   );
-  const [showVolumeModal, setShowVolumeModal] = useState<boolean>(false);
 
   const audioRef = useRef<HTMLAudioElement>(null);
   const timersRef = useRef<Map<number, Timer>>(new Map());
 
   useEffect(() => {
-    setTimeout(() => {
-      setRandomBackground();
-    }, 100);
+    setTimeout(() => setRandomBackground(), 100);
   }, []);
 
-  // Zapisuj volume przy każdej zmianie
   useEffect(() => {
     save("volume", volume);
   }, [volume]);
 
-  // Aktualizuj timery co 100ms
   useEffect(() => {
     const interval = setInterval(() => {
       setActiveTimers((prev) =>
@@ -99,7 +101,6 @@ export default function App() {
           .filter((timer) => timer.timeLeft > 0),
       );
     }, 100);
-
     return () => clearInterval(interval);
   }, []);
 
@@ -125,7 +126,6 @@ export default function App() {
 
     const timerId = Date.now();
     const progressElement: ProgressElement = { value: 0, max: config.duration };
-
     const timerInstance = new Timer(config.duration, progressElement, () =>
       handleTimerComplete(timerId),
     );
@@ -133,16 +133,17 @@ export default function App() {
     timerInstance.start();
     timersRef.current.set(timerId, timerInstance);
 
-    const newTimer: ActiveTimer = {
-      id: timerId,
-      configId: config.id,
-      duration: config.duration,
-      timeLeft: config.duration,
-      timer: timerInstance,
-      isPaused: false,
-    };
-
-    setActiveTimers((prev) => [...prev, newTimer]);
+    setActiveTimers((prev) => [
+      ...prev,
+      {
+        id: timerId,
+        configId: config.id,
+        duration: config.duration,
+        timeLeft: config.duration,
+        timer: timerInstance,
+        isPaused: false,
+      },
+    ]);
   };
 
   const handleTimerComplete = (timerId: number) => {
@@ -150,7 +151,6 @@ export default function App() {
       audioRef.current.volume = volume / 100;
       playSound(audioRef.current);
     }
-
     timersRef.current.delete(timerId);
   };
 
@@ -226,15 +226,15 @@ export default function App() {
                       (t) => t.configId === config.id,
                     );
                     if (configTimers.length === 0) return 0;
-                    const avgTimeElapsed =
+                    return (
                       configTimers.reduce(
                         (sum, t) => sum + (t.duration - t.timeLeft),
                         0,
-                      ) / configTimers.length;
-                    return avgTimeElapsed;
+                      ) / configTimers.length
+                    );
                   })()}
                   max={config.duration}
-                ></progress>
+                />
 
                 <div className="button-group">
                   <button
@@ -271,9 +271,7 @@ export default function App() {
                       const timer = activeTimers.find(
                         (t) => t.configId === config.id,
                       );
-                      if (timer) {
-                        removeTimer(timer.id);
-                      }
+                      if (timer) removeTimer(timer.id);
                     }}
                     className="control-button red"
                     disabled={
@@ -289,14 +287,23 @@ export default function App() {
 
           <div className="controls-card">
             <div className="controls-row">
-              <div className="volume-settings-container">
+              <div className="volume-inline">
                 <button
-                  onClick={() => setShowVolumeModal(true)}
-                  className="volume-button"
+                  className="volume-icon-btn"
+                  onClick={testSound}
+                  title="Test sound"
                 >
-                  <span>🔊</span>
-                  <span className="volume-label">Volume Settings</span>
+                  {volumeIcon(volume)}
                 </button>
+                <input
+                  className="volume-slider"
+                  type="range"
+                  min="0"
+                  max="100"
+                  value={volume}
+                  onChange={(e) => setVolume(Number(e.target.value))}
+                />
+                <span className="volume-value">{volume}%</span>
               </div>
             </div>
 
@@ -304,39 +311,6 @@ export default function App() {
           </div>
         </div>
       </div>
-
-      {showVolumeModal && (
-        <div className="modal" onClick={() => setShowVolumeModal(false)}>
-          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-            <div className="modal-header">
-              <h2>Volume Settings</h2>
-            </div>
-            <div className="modal-body">
-              <div className="volume-control">
-                <div className="volume-display">{volume}%</div>
-                <input
-                  type="range"
-                  min="0"
-                  max="100"
-                  value={volume}
-                  onChange={(e) => setVolume(Number(e.target.value))}
-                />
-                <button onClick={testSound} className="test-sound-button">
-                  Test Sound
-                </button>
-              </div>
-            </div>
-            <div className="modal-footer">
-              <button
-                onClick={() => setShowVolumeModal(false)}
-                className="save-button"
-              >
-                Close
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
 
       <audio ref={audioRef} preload="auto" src="./alert.mp3" />
     </>
